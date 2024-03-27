@@ -37,14 +37,22 @@ def show_img_box(img, bbox):
 def augment_img(img,bbox):
     transform = A.Compose(
         [
-            A.Flip(p=1),
+            A.GaussianBlur(),
+            A.BBoxSafeRandomCrop(),
+            A.OneOf(
+                [A.ChannelDropout(), A.ChannelShuffle(), A.ColorJitter()],
+            ),
+            A.OneOf(
+                [A.ToSepia(), A.ToGray()],
+            ),
+            A.MultiplicativeNoise(multiplier=[0.5, 1.5], per_channel=True, p=0.25),
         ], bbox_params=A.BboxParams(format='pascal_voc', label_fields=[])
     )
 
-    images_list = []
-    saved_bboxes = []
+    images_list = [img]
+    saved_bboxes = [bbox[0]]
 
-    for i in range(1):
+    for i in range(5):
         augmentations = transform(image=img, bboxes=bbox)
         augmented_img = augmentations["image"]
         images_list.append(augmented_img)
@@ -52,11 +60,28 @@ def augment_img(img,bbox):
     return images_list,saved_bboxes
 
 
+def write_image_box(images_list , bboxes_list, path, filename):
+    for i in range(len(images_list)):
+        cv2.imwrite(path+'images/'+filename+ str(i) + '.jpg', images_list[i])
+        with open(path+'labels/'+filename+ str(i) +'.txt', 'w') as file:
+            # Writing each element of the list to a new line in the file
+            for num in bboxes_list[i]:
+                file.write(str(num) + '\n')
+
 img_paths = glob.glob("/home/abhiram/PycharmProjects/ASLDetection/ASL_Pascal_Voc/train/*.jpg")
 
-for img_path in img_paths:
-    img,bboxes = read_img_box(img_path[:-3])
+i = 0
 
+for img_path in img_paths:
+    if i : break
+    i += 1
+    img, bboxes = read_img_box(img_path[:-3])
+    images_list, saved_bboxes = augment_img(img, bboxes)
+    # for j in range(len(images_list)):
+    #     show_img_box(images_list[j],saved_bboxes[j])
+    print(img_path[64:-4])
+    save_path = "/home/abhiram/PycharmProjects/ASLDetection/AUG_ASL_Pascal_Voc/train/"
+    write_image_box(images_list,saved_bboxes,save_path,img_path[64:-4])
 
 
 
