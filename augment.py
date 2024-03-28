@@ -6,7 +6,7 @@ import time
 
 
 def pascal_voc_to_yolo(x1, y1, x2, y2, image_w, image_h):
-    return [0, ((x2 + x1)/(2*image_w)), ((y2 + y1)/(2*image_h)), (x2 - x1)/image_w, (y2 - y1)/image_h]
+    return [((x2 + x1)/(2*image_w)), ((y2 + y1)/(2*image_h)), (x2 - x1)/image_w, (y2 - y1)/image_h]
 
 
 def read_img_box(path):
@@ -68,7 +68,9 @@ def write_image_box(images_list , bboxes_list, path, filename):
         cv2.imwrite(path+'images/'+filename+ str(i) + '.jpg', images_list[i])
         height, width, channels = images_list[i].shape
         x1,y1,x2,y2 = bboxes_list[i]
-        yolo_bbox = pascal_voc_to_yolo(x1,y1,x2,y2,width,height)
+        index = ord(filename[0])-ord('A')
+        yolo_bbox = [index]
+        yolo_bbox += pascal_voc_to_yolo(x1,y1,x2,y2,width,height)
         with open(path+'labels/'+filename+ str(i) +'.txt', 'w') as file:
             # Writing each element of the list to a new line in the file
             for num in yolo_bbox:
