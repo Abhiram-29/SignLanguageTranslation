@@ -4,11 +4,11 @@ import time
 
 start_time = time.time()
 
-model = YOLO("yolov8n.yaml")
+model = YOLO("yolov8m-cls.pt")
 
-model.train(data="config.yaml", epochs=200, resume = True)
+model.train(data="/home/abhiram/Downloads/archive/ASL_Alphabet_Dataset/", epochs=200)
 metrics = model.val()
-path = model.export(format="onnx")  # export the model to ONNX format
+# path = model.export(format="onnx")  # export the model to ONNX format
 
 end_time = time.time()
 execution_time = end_time - start_time

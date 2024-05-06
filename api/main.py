@@ -6,7 +6,7 @@ from fastapi import File, UploadFile
 import torch
 import json
 
-model = YOLO("/home/abhiram/PycharmProjects/ASLDetection/runs/detect/train3/weights/best.pt")
+model = YOLO("//home/abhiram/PycharmProjects/ASLDetection/runs/classify/best.pt")
 app = FastAPI()
 
 
@@ -20,12 +20,17 @@ async def detect_objects(file: UploadFile):
     results = model(image)
     detections = []
     for result in results:
-        boxes = result.boxes
-        boxes = boxes.cpu()
-        print("The printed part")
-        print(boxes.numpy())
-        print("The class is ", boxes.cls.numpy()[0])
-        detections.append(int(boxes.cls.numpy()[0]))
-    print(detections)
+        # The commented code involving boxes is for the detection model
+        # boxes = result.boxes
+        # boxes = boxes.cpu()
+        # print("The printed part")
+        # print(boxes.numpy())
+        # print("The class is ", boxes.cls.numpy()[0])
+        # detections.append(int(boxes.cls.numpy()[0]))
+
+        # The below code if for the classification model
+        print("The predictions in the image are : ")
+        print(result.probs.top1)
+        detections.append(result.probs.top1)
     detections = json.dumps(detections)
     return {"detections": detections}

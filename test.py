@@ -3,7 +3,7 @@ import cv2
 import time
 
 vid = cv2.VideoCapture(0)
-model = YOLO('/home/abhiram/PycharmProjects/ASLDetection/runs/detect/train3/weights/best.pt')
+model = YOLO('/runs/detect/nanoTrain/weights/best.pt')
 
 prevFrameTime = 0
 newFrameTime = 0
