@@ -1,7 +1,7 @@
 from ultralytics import  YOLO
 import cv2
 import time
-import supervision as sv    
+import supervision as sv
 
 vid = cv2.VideoCapture(0)
 model = YOLO("./runs/detect/train3/weights/best.pt")
