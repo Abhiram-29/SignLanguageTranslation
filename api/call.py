@@ -21,7 +21,7 @@ while True:
     if response.status_code == 200:
         detection = response.text["detections"]
         cv2.putText(frame, detection, (10, 450), font, 3, (0, 255, 0), 2, cv2.LINE_AA)
-        cv2.imshow('detection', frame)
+        cv2.imshow('Detected Alphabet', frame)
 
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
